@@ -1,0 +1,12 @@
+CXX      = g++
+CXXFLAGS = -pedantic -std=c++17 -Wall -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -Wno-address -Wno-noexcept-type -Wno-unknown-attributes -Wno-unknown-warning-option
+CPPFLAGS =
+LDFLAGS  =
+LIBS     = -lgmpxx -lgmp
+
+SRC_DIR   = src
+BUILD_DIR = build
+PROG      = Emulator
+
+: foreach $(SRC_DIR)/*.cpp |> $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c %f -o %o |> $(BUILD_DIR)/%B.o
+: $(BUILD_DIR)/*.o |> $(CXX) %f $(LDFLAGS) $(LIBS) -o %o |> $(PROG)

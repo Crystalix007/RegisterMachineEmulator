@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <gmpxx.h>
 #include <utility>
+#include <vector>
 
 using Register = mpz_class;
 using RegIndex = uint16_t;

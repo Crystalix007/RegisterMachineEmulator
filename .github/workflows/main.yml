@@ -11,19 +11,21 @@ jobs:
     - uses: actions/checkout@v1
       with:
         fetch-depth: 1
+        path: emulator
 
     - name: Clean repo of artifacts
-      run: git clean -f
+      run: |
+        git clean -f
 
     - name: Cache tup build dependency
       id: cache-tup
       uses: actions/cache@v1
       with:
-        path: "${HOME}/dependencies/gittup"
+        path: dependencies/gittup
         key: ${{ runner.OS }}-gittup
 
     - name: Install tup build dependency
-      if: steps.cache-tup.outputs.cache-git != 'true'
+      if: steps.cache-tup.outputs.cache-hit != 'true'
       run: |
         sudo apt install libfuse-dev
         cd "${HOME}"
@@ -31,11 +33,13 @@ jobs:
         cd dependencies/gittup
         ./build.sh
         ./bootstrap.sh
+        mkdir -p "${GITHUB_WORKSPACE}/dependencies/gittup"
+        cp "${HOME}/dependencies/gittup/build/tup" "${GITHUB_WORKSPACE}/dependencies/gittup/"
 
     - name: Install gmp library
       run: sudo apt-get install libgmp-dev
 
     - name: Run a build
       run: |
-        "${HOME}/dependencies/gittup/build/tup" init
-        "${HOME}/dependencies/gittup/build/tup"
+        "${GITHUB_WORKSPACE}/dependencies/gittup/tup" init
+        "${GITHUB_WORKSPACE}/dependencies/gittup/tup"

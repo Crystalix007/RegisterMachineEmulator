@@ -1,4 +1,5 @@
 #include "register.hpp"
+#include <iostream>
 
 template <>
 std::pair<Register, Register> toPair<false>(Register unsplit) {
@@ -40,4 +41,21 @@ std::vector<Register> toList(Register unsplit) {
 	}
 
 	return list;
+}
+
+std::ostream& printInstruction(std::ostream& sout, Register instruction) {
+	if (instruction == 0)
+		return sout << "BREAK";
+
+	const auto splitInstruction = toPair<false>(instruction);
+	const auto command = splitInstruction.first / 2;
+
+	if (splitInstruction.first % 2 == 0) {
+		/* We have an increment instruction, so second parameter is just label. */
+			return sout << "R" << command << "\u207a \u21a3 " << splitInstruction.second;
+	}
+
+	const auto labels = toPair<true>(splitInstruction.second);
+
+	return sout << "R" << command << "\u207b \u21a3 " << labels.first << ", " << labels.second;
 }

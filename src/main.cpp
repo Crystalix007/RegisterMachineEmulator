@@ -25,7 +25,8 @@ int main() {
 		const auto registerState = registerStates[i];
 
 		registers.insert(std::make_pair(i, registerState));
-		std::cout << std::setw(registerIndexPadding) << i << ": " << registerState << "\n";
+		std::cout << std::setw(registerIndexPadding) << i << ": " << registerState << " => ";
+ 		printInstruction(std::cout, registerState) << std::endl;
 	}
 
 	std::cout << std::setw(registerIndexPadding) << i << ": 0...\n\n";
@@ -36,9 +37,9 @@ int main() {
 	while (executing) {
 		std::cout << "L" << pc << "\t";
 		Register instruction = getOrDefault(registers, pc);
+		printInstruction(std::cout, instruction) << std::endl;
 
 		if (instruction == 0) { /* HALT instruction. */
-			std::cout << "HALT" << std::endl;
 			executing = false;
 			continue;
 		}
@@ -49,9 +50,6 @@ int main() {
 			RegIndex sourceRegisterIndex = splitInstruction.first.get_ui();
 			RegIndex destinationLabel = splitInstruction.second.get_ui();
 
-			std::cout << "R" << sourceRegisterIndex << u8"\u207a \u21a3 " << destinationLabel
-			          << "\n";
-
 			getOrDefault(registers, sourceRegisterIndex)++;
 			pc = destinationLabel;
 		} else {
@@ -60,9 +58,6 @@ int main() {
 			auto branches = toPair<true>(splitInstruction.second);
 			RegIndex trueLabel = branches.first.get_ui();
 			RegIndex falseLabel = branches.second.get_ui();
-
-			std::cout << "R" << sourceRegisterIndex << "\u207b \u21a3 " << trueLabel << ", "
-			          << falseLabel << "\n";
 
 			auto& sourceRegister = getOrDefault(registers, sourceRegisterIndex);
 

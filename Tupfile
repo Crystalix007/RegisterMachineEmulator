@@ -10,3 +10,5 @@ PROG      = Emulator
 
 : foreach $(SRC_DIR)/*.cpp |> $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c %f -o %o |> $(BUILD_DIR)/%B.o
 : $(BUILD_DIR)/*.o |> $(CXX) %f $(LDFLAGS) $(LIBS) -o %o |> $(PROG)
+
+.gitignore

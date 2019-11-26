@@ -11,6 +11,7 @@ std::pair<Register, Register> toPair<false>(Register unsplit) {
 		x++;
 	}
 
+	/* Skip the first 1 bit. */
 	unsplit >>= 1;
 
 	return std::make_pair(x, unsplit);
@@ -26,6 +27,7 @@ std::pair<Register, Register> toPair<true>(Register unsplit) {
 		x++;
 	}
 
+	/* Skip the first 0 bit. */
 	unsplit >>= 1;
 
 	return std::make_pair(x, unsplit);
